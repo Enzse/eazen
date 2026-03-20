@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Idea {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String
+  category          String
+  tags              String
+  stage             String
+  interest          Int
+  learning_value    Int
+  income_potential  Int
+  effort            Int
+  priority_score    Int
+  project           Project?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Project {
+  id        Int      @id @default(autoincrement())
+  idea      Idea     @relation(fields: [ideaId], references: [id])
+  ideaId    Int      @unique
+  name      String
+  status    String
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   Int
+  title       String
+  description String?
+  status      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+}
