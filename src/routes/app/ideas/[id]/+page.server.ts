@@ -19,7 +19,12 @@ export async function load({ params }) {
 	const idea = await prisma.idea.findUnique({ where: { id } });
 	if (!idea) throw error(404, 'Idea not found.');
 
-	return { idea };
+	const project = await prisma.project.findUnique({
+		where: { ideaId: id },
+		select: { id: true, name: true, status: true }
+	});
+
+	return { idea, project };
 }
 
 export const actions = {
@@ -101,6 +106,32 @@ export const actions = {
 
 		await prisma.idea.delete({ where: { id } });
 		return redirect(303, '/app/ideas/new');
+	},
+
+	convertIdeaToProject: async ({ params }) => {
+		const id = Number.parseInt(params.id, 10);
+		if (Number.isNaN(id)) throw error(400, 'Invalid idea id.');
+
+		const idea = await prisma.idea.findUnique({
+			where: { id },
+			select: { id: true, title: true }
+		});
+		if (!idea) throw error(404, 'Idea not found.');
+
+		const existing = await prisma.project.findUnique({ where: { ideaId: id } });
+		if (existing) {
+			return redirect(303, `/app/projects/${existing.id}`);
+		}
+
+		const project = await prisma.project.create({
+			data: {
+				ideaId: id,
+				name: idea.title,
+				status: 'planned'
+			}
+		});
+
+		return redirect(303, `/app/projects/${project.id}`);
 	}
 } satisfies import('./$types').Actions;
 

@@ -1,3 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+
+
+.div{
+    background-color: "#F2F0EF"
+};
