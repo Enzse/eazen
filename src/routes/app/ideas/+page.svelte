@@ -21,13 +21,20 @@
 	}>();
 
 	const stageOptions = ['captured', 'selected', 'archived'];
+
+	const sortLabel = $derived(
+		data.sort === 'newest' ? 'Newest first' : 'Priority (high first)'
+	);
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<div class="flex items-start justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-slate-900">Ideas</h1>
 			<p class="mt-1 text-sm text-slate-600">Capture, evaluate, and prioritize</p>
+			<p class="mt-2 text-xs text-slate-500">
+				{data.ideas.length} result(s) · Sorted: {sortLabel}
+			</p>
 		</div>
 		<a
 			class="inline-flex rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
@@ -94,9 +101,9 @@
 		</div>
 	</form>
 
-	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 		{#if data.ideas.length === 0}
-			<div class="sm:col-span-2 rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
+			<div class="col-span-full rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
 				No ideas match your filters.
 			</div>
 		{:else}

@@ -23,7 +23,7 @@
 	const pill = $derived(statusPill(project.status));
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<div class="flex items-start justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-slate-900">Project: {project.name}</h1>

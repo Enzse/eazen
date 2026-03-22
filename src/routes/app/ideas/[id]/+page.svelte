@@ -27,7 +27,7 @@
 	const project = $derived(data.project ?? null);
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<div class="flex items-center justify-between gap-4">
 		<h1 class="text-2xl font-bold text-slate-900">Idea #{idea.id}</h1>
 		<div class="text-xs text-slate-500">

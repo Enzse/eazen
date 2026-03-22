@@ -14,7 +14,7 @@
 	}>();
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<div class="flex items-start justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-slate-900">Projects</h1>
@@ -28,9 +28,9 @@
 		</a>
 	</div>
 
-	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 		{#if data.projects.length === 0}
-			<div class="sm:col-span-2 lg:col-span-3 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+			<div class="col-span-full rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
 				No projects yet. Convert an idea to a project.
 			</div>
 		{:else}

@@ -19,7 +19,7 @@
 	}>();
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<h1 class="text-2xl font-bold text-slate-900">Dashboard</h1>
 	<p class="mt-1 text-sm text-slate-600">Your priorities and next actions</p>
 
@@ -32,9 +32,9 @@
 				</a>
 			</div>
 
-			<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+			<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
 				{#if data.topIdeas.length === 0}
-					<div class="sm:col-span-2 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+					<div class="col-span-full rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
 						No ideas yet. Create one to see it on your dashboard.
 					</div>
 				{:else}

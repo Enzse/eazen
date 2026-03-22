@@ -53,7 +53,7 @@
 	);
 </script>
 
-<div class="mx-auto max-w-2xl">
+<div class="w-full">
 	<div class="space-y-4">
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<div class="md:col-span-2">

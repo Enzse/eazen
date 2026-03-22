@@ -8,7 +8,7 @@
 	const initial = $derived(form?.initial as any);
 </script>
 
-<div class="mx-auto max-w-5xl p-6">
+<div class="w-full">
 	<h1 class="text-2xl font-bold text-slate-900">New Idea</h1>
 
 	{#if form?.error}
