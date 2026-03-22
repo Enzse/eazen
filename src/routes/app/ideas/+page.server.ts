@@ -43,7 +43,6 @@ export async function load({ url }) {
 		}
 	});
 
-	// For filter dropdowns
 	const categories = await prisma.idea
 		.findMany({
 			distinct: ['category'],
@@ -52,6 +51,11 @@ export async function load({ url }) {
 		})
 		.then((rows) => rows.map((r) => r.category));
 
-	return { ideas, categories, selectedCategory: category, selectedStage: stage, sort };
+	return {
+		ideas,
+		categories,
+		selectedCategory: category,
+		selectedStage: stage,
+		sort
+	};
 }
-
