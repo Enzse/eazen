@@ -7,6 +7,9 @@ export type PriorityBreakdownInput = {
 	effort: number;
 };
 
+export const SCORE_MIN = -7;
+export const SCORE_MAX = 29;
+
 export function computePriorityScore(input: PriorityBreakdownInput): number {
 	return input.interest + input.learning_value + input.income_potential - input.effort;
 }
@@ -17,22 +20,47 @@ export function getPriorityTier(priority_score: number): PriorityTier {
 	return 'low';
 }
 
+/** Where a score sits between the lowest and highest possible score, 0–1. */
+export function scoreHeat(priority_score: number): number {
+	const t = (priority_score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN);
+	return Math.min(1, Math.max(0, t));
+}
+
+/** Priority reads as heat: high glows ember, medium is warm sand, low stays neutral. */
 export function getPriorityBadge(priority_score: number): {
 	tier: PriorityTier;
 	label: string;
 	badgeClass: string;
 	textClass: string;
+	color: string;
 } {
 	const tier = getPriorityTier(priority_score);
 
 	if (tier === 'high') {
-		return { tier, label: 'High', badgeClass: 'bg-red-50 border-red-200', textClass: 'text-red-700' };
+		return {
+			tier,
+			label: 'High',
+			badgeClass: 'bg-ember-500/12 border-ember-500/35 shadow-[0_0_18px_-4px_rgb(244_123_53/0.55)]',
+			textClass: 'text-ember-300',
+			color: 'var(--color-ember-400)'
+		};
 	}
 
 	if (tier === 'medium') {
-		return { tier, label: 'Medium', badgeClass: 'bg-yellow-50 border-yellow-200', textClass: 'text-yellow-700' };
+		return {
+			tier,
+			label: 'Medium',
+			badgeClass: 'bg-sand-300/8 border-sand-300/25',
+			textClass: 'text-sand-300',
+			color: 'var(--color-sand-300)'
+		};
 	}
 
-	return { tier, label: 'Low', badgeClass: 'bg-green-50 border-green-200', textClass: 'text-green-700' };
+	return {
+		tier,
+		label: 'Low',
+		badgeClass: 'bg-white/4 border-white/10',
+		textClass: 'text-ink-400',
+		color: 'var(--color-ink-400)'
+	};
 }
-

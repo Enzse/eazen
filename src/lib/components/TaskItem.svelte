@@ -1,5 +1,12 @@
 <script lang="ts">
-	let { task } = $props<{
+	import { enhance } from '$app/forms';
+	import Icon from '$lib/components/Icon.svelte';
+	import { taskStatus, TASK_STATUS } from '$lib/ui/status';
+
+	let {
+		task,
+		index = 0
+	}: {
 		task: {
 			id: number;
 			title: string;
@@ -7,100 +14,128 @@
 			status: string;
 			completedAt: string | Date | null;
 		};
-	}>();
+		index?: number;
+	} = $props();
 
-	let selectedStatus = $state('todo');
-	let selectedTitle = $state('');
-	let selectedDescription = $state('');
-	$effect(() => {
-		selectedStatus = task.status;
-		selectedTitle = task.title;
-		selectedDescription = task.description ?? '';
-	});
+	const NEXT: Record<string, string> = { todo: 'doing', doing: 'done', done: 'todo' };
 
-	function statusPill(status: string) {
-		if (status === 'done') return { badgeClass: 'bg-green-50 border-green-200', textClass: 'text-green-700', label: 'Done' };
-		if (status === 'doing') return { badgeClass: 'bg-blue-50 border-blue-200', textClass: 'text-blue-700', label: 'Doing' };
-		return { badgeClass: 'bg-slate-50 border-slate-200', textClass: 'text-slate-700', label: 'Todo' };
+	let editing = $state(false);
+	let editTitle = $state('');
+	let editDescription = $state('');
+	let editStatus = $state('todo');
+
+	function startEdit() {
+		editTitle = task.title;
+		editDescription = task.description ?? '';
+		editStatus = task.status;
+		editing = true;
 	}
 
-	const pill = $derived(statusPill(task.status));
+	const s = $derived(taskStatus(task.status));
+	const next = $derived(taskStatus(NEXT[task.status] ?? 'todo'));
+	const done = $derived(task.status === 'done');
 </script>
 
-<div class="rounded-lg border border-slate-200 bg-white p-3">
-	<div class="flex items-start justify-between gap-3">
-		<div>
-			<div class="text-sm font-semibold text-slate-900">{task.title}</div>
-			{#if task.description}
-				<p class="mt-1 text-sm text-slate-600">{task.description}</p>
-			{/if}
-			{#if task.status === 'done' && task.completedAt}
-				<div class="mt-2 text-xs text-slate-500">
-					Completed: {new Date(task.completedAt).toLocaleDateString()}
-				</div>
-			{/if}
-		</div>
-		<span
-			class={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${pill.badgeClass} ${pill.textClass}`}
-		>
-			{pill.label}
-		</span>
-	</div>
-
-	<div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
-		<form method="POST" action="?/updateTask" class="sm:col-span-2">
-			<input type="hidden" name="taskId" value={task.id} />
-			<label class="block text-xs text-slate-600">
-				Title
-				<input
-					type="text"
-					name="title"
-					class="mt-1 w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-					required
-					bind:value={selectedTitle}
-				/>
-			</label>
-
-			<label class="mt-2 block text-xs text-slate-600">
-				Description
-				<textarea
-					name="description"
-					class="mt-1 w-full min-h-[70px] rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-					bind:value={selectedDescription}
-				></textarea>
-			</label>
-
-			<label class="mt-2 block text-xs text-slate-600">
-				Status
-				<select
-					name="status"
-					class="mt-1 w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-					bind:value={selectedStatus}
-				>
-					<option value="todo">todo</option>
-					<option value="doing">doing</option>
-					<option value="done">done</option>
-				</select>
-			</label>
-			<div class="mt-2 flex justify-end">
+<article
+	class="rise group rounded-2xl border bg-ink-900/70 p-3.5 transition-all duration-200 {editing
+		? 'border-ember-500/30'
+		: 'border-white/6 hover:border-white/12 hover:bg-ink-850/80'}"
+	style:--i={index}
+>
+	{#if !editing}
+		<div class="flex items-start gap-3">
+			<!-- One click moves the task to its next status. -->
+			<form method="POST" action="?/updateTask" use:enhance>
+				<input type="hidden" name="taskId" value={task.id} />
+				<input type="hidden" name="title" value={task.title} />
+				<input type="hidden" name="description" value={task.description ?? ''} />
+				<input type="hidden" name="status" value={NEXT[task.status] ?? 'todo'} />
 				<button
 					type="submit"
-					class="rounded bg-slate-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-slate-800"
+					class="mt-0.5 flex h-6 w-6 items-center justify-center rounded-lg border transition-all duration-200 active:scale-90 {done
+						? 'border-sage-400/40 bg-sage-400/15 text-sage-400'
+						: task.status === 'doing'
+							? 'border-ember-500/50 bg-ember-500/15 text-ember-300 shadow-[0_0_12px_-2px_rgb(244_123_53/0.6)]'
+							: 'border-white/15 text-transparent hover:border-ember-400/60 hover:text-ember-400/60'}"
+					title="Move to {next.label}"
+					aria-label="Move “{task.title}” to {next.label}"
 				>
-					Save
+					<Icon name={task.status === 'doing' ? 'half' : 'check'} size={13} stroke={2.5} />
 				</button>
+			</form>
+
+			<div class="min-w-0 flex-1">
+				<p class="text-sm leading-snug font-medium {done ? 'text-ink-500 line-through decoration-ink-600' : 'text-ink-100'}">
+					{task.title}
+				</p>
+				{#if task.description}
+					<p class="mt-1 line-clamp-3 text-xs leading-relaxed text-ink-500">{task.description}</p>
+				{/if}
+				{#if done && task.completedAt}
+					<p class="num mt-1.5 text-[11px] text-sage-400/80">
+						Done {new Date(task.completedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+					</p>
+				{/if}
+			</div>
+
+			<button
+				type="button"
+				class="rounded-lg p-1.5 text-ink-600 opacity-100 transition-all hover:bg-white/6 hover:text-ink-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+				onclick={startEdit}
+				aria-label="Edit “{task.title}”"
+			>
+				<Icon name="pencil" size={14} />
+			</button>
+		</div>
+	{:else}
+		<form
+			method="POST"
+			action="?/updateTask"
+			use:enhance={() =>
+				async ({ update }) => {
+					await update();
+					editing = false;
+				}}
+			class="space-y-3"
+		>
+			<input type="hidden" name="taskId" value={task.id} />
+			<label class="block">
+				<span class="sr-only">Title</span>
+				<input type="text" name="title" class="field mt-0!" required bind:value={editTitle} />
+			</label>
+			<label class="block">
+				<span class="sr-only">Description</span>
+				<textarea
+					name="description"
+					class="field mt-0! min-h-18 text-xs"
+					placeholder="Notes (optional)"
+					bind:value={editDescription}
+				></textarea>
+			</label>
+			<div class="grid grid-cols-3 gap-1 rounded-xl border border-white/7 bg-ink-950/50 p-1">
+				{#each Object.entries(TASK_STATUS) as [value, st] (value)}
+					<label
+						class="cursor-pointer rounded-lg py-1.5 text-center text-xs font-medium transition-all has-focus-visible:ring-2 has-focus-visible:ring-ember-400 {editStatus ===
+						value
+							? 'bg-white/8 text-ink-100'
+							: 'text-ink-500 hover:text-ink-300'}"
+					>
+						<input type="radio" name="status" {value} class="sr-only" bind:group={editStatus} />
+						{st.label}
+					</label>
+				{/each}
+			</div>
+			<div class="flex items-center justify-between gap-2">
+				<button type="submit" formaction="?/deleteTask" formnovalidate class="btn btn-danger btn-sm" onclick={(e) => {
+					if (!confirm(`Delete “${task.title}”?`)) e.preventDefault();
+				}}>
+					<Icon name="trash" size={13} /> Delete
+				</button>
+				<div class="flex gap-2">
+					<button type="button" class="btn btn-ghost btn-sm" onclick={() => (editing = false)}>Cancel</button>
+					<button type="submit" class="btn btn-primary btn-sm">Save</button>
+				</div>
 			</div>
 		</form>
-
-		<form method="POST" action="?/deleteTask">
-			<input type="hidden" name="taskId" value={task.id} />
-			<button
-				type="submit"
-				class="rounded border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-100"
-			>
-				Delete
-			</button>
-		</form>
-	</div>
-</div>
-
+	{/if}
+</article>

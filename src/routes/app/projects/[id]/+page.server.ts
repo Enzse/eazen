@@ -2,6 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 
 const TASK_STATUS = new Set(['todo', 'doing', 'done']);
+const PROJECT_STATUS = new Set(['planned', 'active', 'paused', 'completed']);
 
 function parseInt(input: FormDataEntryValue | string | null | undefined) {
 	if (typeof input !== 'string') return null;
@@ -17,7 +18,7 @@ export async function load({ params }) {
 		where: { id: projectId },
 		include: {
 			idea: true,
-			tasks: { orderBy: { createdAt: 'desc' } }
+			tasks: { orderBy: { createdAt: 'asc' } }
 		}
 	});
 
@@ -27,6 +28,40 @@ export async function load({ params }) {
 }
 
 export const actions = {
+	updateProject: async ({ request, params }) => {
+		const projectId = Number.parseInt(params.id, 10);
+		if (Number.isNaN(projectId)) throw error(400, 'Invalid project id.');
+
+		const data = await request.formData();
+		const nameRaw = data.get('name');
+		const statusRaw = data.get('status');
+		const name = typeof nameRaw === 'string' ? nameRaw.trim() : '';
+		const status = typeof statusRaw === 'string' ? statusRaw : '';
+
+		if (!name) return fail(400, { projectError: 'Project name is required.' });
+		if (!PROJECT_STATUS.has(status)) return fail(400, { projectError: 'Invalid project status.' });
+
+		const existing = await prisma.project.findUnique({ where: { id: projectId }, select: { id: true } });
+		if (!existing) throw error(404, 'Project not found.');
+
+		await prisma.project.update({ where: { id: projectId }, data: { name, status } });
+
+		return redirect(303, `/app/projects/${projectId}`);
+	},
+
+	deleteProject: async ({ params }) => {
+		const projectId = Number.parseInt(params.id, 10);
+		if (Number.isNaN(projectId)) throw error(400, 'Invalid project id.');
+
+		// Tasks first, then the project. The idea stays and can be converted again.
+		await prisma.$transaction([
+			prisma.task.deleteMany({ where: { projectId } }),
+			prisma.project.deleteMany({ where: { id: projectId } })
+		]);
+
+		return redirect(303, '/app/projects');
+	},
+
 	createTask: async ({ request, params }) => {
 		const projectId = Number.parseInt(params.id, 10);
 		if (Number.isNaN(projectId)) throw error(400, 'Invalid project id.');

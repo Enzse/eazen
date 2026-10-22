@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { afterNavigate, goto } from '$app/navigation';
+	import { onDestroy, tick } from 'svelte';
+	import Icon from '$lib/components/Icon.svelte';
 	import IdeaCard from '$lib/components/IdeaCard.svelte';
+	import IdeaEditorModal from '$lib/components/IdeaEditorModal.svelte';
 
 	type IdeaRow = {
 		id: number;
@@ -12,189 +16,198 @@
 		createdAt: string | Date;
 	};
 
-	let { data } = $props<{
-		data: {
-			ideas: IdeaRow[];
-			categories: string[];
-			selectedCategory: string | null;
-			selectedStage: string | null;
-			sort: string;
-		};
-	}>();
+	let { data, form } = $props();
+
+	let ideaModalRef: { openModal: () => void; closeModal: () => void } | undefined = $state();
+
+	const initial = $derived(form?.initial as Record<string, unknown> | undefined);
 
 	/** Client-only: filters the loaded list as the user types */
 	let searchQuery = $state('');
 
-	const stageOptions = ['captured', 'selected', 'archived'];
+	const stageTabs = [
+		{ value: null, label: 'All' },
+		{ value: 'captured', label: 'Captured' },
+		{ value: 'selected', label: 'Selected' },
+		{ value: 'archived', label: 'Archived' }
+	];
 
-	const sortLabel = $derived(
-		data.sort === 'newest' ? 'Newest first' : 'Priority (high first)'
-	);
-
-	const filtersActive = $derived(
-		Boolean(data.selectedCategory || data.selectedStage || data.sort !== 'priority')
-	);
-
-	const searchActive = $derived(Boolean(searchQuery.trim()));
+	const filtersActive = $derived(Boolean(data.selectedCategory || data.selectedStage || data.sort !== 'priority'));
 
 	const filteredIdeas = $derived.by(() => {
 		const q = searchQuery.trim().toLowerCase();
-		if (!q) return data.ideas;
-		return data.ideas.filter((idea: IdeaRow) => {
-			const title = idea.title.toLowerCase();
-			const desc = idea.description.toLowerCase();
-			const tags = idea.tags.toLowerCase();
-			return title.includes(q) || desc.includes(q) || tags.includes(q);
-		});
+		if (!q) return data.ideas as IdeaRow[];
+		return (data.ideas as IdeaRow[]).filter(
+			(idea) =>
+				idea.title.toLowerCase().includes(q) ||
+				idea.description.toLowerCase().includes(q) ||
+				idea.tags.toLowerCase().includes(q)
+		);
+	});
+
+	/** Builds a list URL that keeps the other filters as they are. */
+	function hrefWith(patch: Record<string, string | null>) {
+		const p = new URLSearchParams();
+		const next = {
+			category: data.selectedCategory,
+			stage: data.selectedStage,
+			sort: data.sort === 'priority' ? null : data.sort,
+			...patch
+		};
+		for (const [k, v] of Object.entries(next)) if (v) p.set(k, v);
+		const s = p.toString();
+		return s ? `/app/ideas?${s}` : '/app/ideas';
+	}
+
+	function openCreateModal() {
+		ideaModalRef?.openModal();
+	}
+
+	/** Open modal from `?new=1` after navigation completes (avoids racing $effect + goto with route teardown). */
+	afterNavigate(async ({ to }) => {
+		if (!to) return;
+		if (to.url.pathname !== '/app/ideas') return;
+		if (to.url.searchParams.get('new') !== '1') return;
+		await tick();
+		ideaModalRef?.openModal();
+		const u = new URL(to.url);
+		u.searchParams.delete('new');
+		await goto(`${u.pathname}${u.search}`, { replaceState: true, noScroll: true, keepFocus: true });
+	});
+
+	onDestroy(() => {
+		ideaModalRef?.closeModal();
 	});
 </script>
 
-<div class="w-full">
-	<div class="flex items-start justify-between gap-4">
-		<div>
-			<h1 class="text-2xl font-bold text-slate-900">Ideas</h1>
-			<p class="mt-1 text-sm text-slate-600">Capture, evaluate, and prioritize</p>
-		</div>
-		<a
-			class="inline-flex shrink-0 rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-			href="/app/ideas/new"
-		>
-			New Idea
-		</a>
-	</div>
+<svelte:head><title>Ideas · ccino</title></svelte:head>
 
-	<!-- Search stays outside the GET form so Enter doesn’t submit filters and reset typing -->
-	<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-stretch">
+<header class="flex flex-wrap items-end justify-between gap-4">
+	<div>
+		<p class="rise eyebrow">Library</p>
+		<h1 class="rise mt-2 text-4xl font-bold text-ink-100" style:--i="1">Ideas</h1>
+		<p class="rise mt-2 text-sm text-ink-400" style:--i="2">Capture, score, and let the best ones rise.</p>
+	</div>
+	<button type="button" class="rise btn btn-primary" style:--i="2" onclick={openCreateModal}>
+		<Icon name="plus" size={16} stroke={2.25} /> New idea
+	</button>
+</header>
+
+<!-- Toolbar -->
+<div class="rise mt-8 space-y-3" style:--i="3">
+	<div class="flex flex-col gap-3 lg:flex-row lg:items-center">
 		<label class="relative min-w-0 flex-1">
 			<span class="sr-only">Search ideas</span>
+			<Icon name="search" size={16} class="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-500" />
 			<input
 				type="search"
 				bind:value={searchQuery}
-				placeholder="Search title, description, tags…"
-				class="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
+				placeholder="Search titles, descriptions, tags…"
+				class="field mt-0! h-11 pl-10"
 				autocomplete="off"
 			/>
-			<span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">
-				<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<circle cx="11" cy="11" r="7" />
-					<path d="M21 21l-4.35-4.35" />
-				</svg>
-			</span>
 		</label>
 
-		<form class="relative shrink-0 sm:self-stretch" method="GET" action="/app/ideas">
-		<div class="relative h-full min-w-[10rem]">
-			<details class="group h-full min-w-[10rem]">
-				<summary
-					class="flex h-full cursor-pointer list-none items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 [&::-webkit-details-marker]:hidden"
-				>
-					<svg class="h-4 w-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M4 6h16M4 12h10M4 18h7" />
-					</svg>
-					Filters
-					{#if filtersActive}
-						<span class="h-2 w-2 rounded-full bg-slate-900" title="Filters active"></span>
-					{/if}
-					<svg
-						class="h-4 w-4 text-slate-500 transition group-open:rotate-180"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
+		<div class="flex flex-wrap items-center gap-2">
+			<nav class="flex rounded-xl border border-white/7 bg-ink-950/50 p-1" aria-label="Filter by stage">
+				{#each stageTabs as t (t.label)}
+					{@const on = (data.selectedStage ?? null) === t.value}
+					<a
+						href={hrefWith({ stage: t.value })}
+						class="rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 {on
+							? 'bg-white/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
+							: 'text-ink-500 hover:text-ink-300'}"
+						aria-current={on ? 'true' : undefined}
+						data-sveltekit-noscroll
+						data-sveltekit-keepfocus
 					>
-						<path d="M6 9l6 6 6-6" />
-					</svg>
-				</summary>
+						{t.label}
+					</a>
+				{/each}
+			</nav>
 
-				<div
-					class="absolute right-0 z-20 mt-2 w-[min(100vw-2rem,20rem)] rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:w-80"
-				>
-					<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Refine list</p>
+			{#if data.categories.filter(Boolean).length > 0}
+				<form method="GET" action="/app/ideas" class="contents">
+					{#if data.selectedStage}<input type="hidden" name="stage" value={data.selectedStage} />{/if}
+					{#if data.sort !== 'priority'}<input type="hidden" name="sort" value={data.sort} />{/if}
+					<label class="sr-only" for="cat">Category</label>
+					<select
+						id="cat"
+						name="category"
+						class="field mt-0! h-10 w-auto min-w-36 py-0"
+						value={data.selectedCategory ?? ''}
+						onchange={(e) => e.currentTarget.form?.requestSubmit()}
+					>
+						<option value="">All categories</option>
+						{#each data.categories.filter(Boolean) as c (c)}
+							<option value={c}>{c}</option>
+						{/each}
+					</select>
+					<noscript><button class="btn btn-ghost btn-sm" type="submit">Apply</button></noscript>
+				</form>
+			{/if}
 
-					<div class="mt-3 space-y-3">
-						<label class="block text-sm">
-							<span class="text-slate-700">Category</span>
-							<select
-								name="category"
-								class="mt-1 w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-								value={data.selectedCategory ?? ''}
-							>
-								<option value="">All</option>
-								{#each data.categories as c}
-									<option value={c}>{c}</option>
-								{/each}
-							</select>
-						</label>
-
-						<label class="block text-sm">
-							<span class="text-slate-700">Stage</span>
-							<select
-								name="stage"
-								class="mt-1 w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-								value={data.selectedStage ?? ''}
-							>
-								<option value="">All</option>
-								{#each stageOptions as s}
-									<option value={s}>{s}</option>
-								{/each}
-							</select>
-						</label>
-
-						<label class="block text-sm">
-							<span class="text-slate-700">Sort</span>
-							<select
-								name="sort"
-								class="mt-1 w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm"
-								value={data.sort}
-							>
-								<option value="priority">Priority (high first)</option>
-								<option value="newest">Newest</option>
-							</select>
-						</label>
-					</div>
-
-					<div class="mt-4 flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-4">
-						<a
-							class="rounded border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-							href="/app/ideas"
-						>
-							Reset all
-						</a>
-						<button
-							type="submit"
-							class="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-						>
-							Apply filters
-						</button>
-					</div>
-				</div>
-			</details>
+			<a
+				href={hrefWith({ sort: data.sort === 'priority' ? 'newest' : null })}
+				class="btn btn-ghost h-10"
+				title="Change sort order"
+				data-sveltekit-noscroll
+			>
+				<Icon name={data.sort === 'priority' ? 'flame' : 'filter'} size={15} class="text-ember-400" />
+				{data.sort === 'priority' ? 'Top priority' : 'Newest'}
+			</a>
 		</div>
-		</form>
 	</div>
 
-	<p class="mt-2 text-xs text-slate-500">
-		{#if searchActive}
-			{filteredIdeas.length} shown (of {data.ideas.length} loaded)
-		{:else}
-			{data.ideas.length} result(s)
+	<p class="flex items-center gap-3 text-xs text-ink-500">
+		<span class="num">
+			{#if searchQuery.trim()}
+				{filteredIdeas.length} of {data.ideas.length} shown
+			{:else}
+				{data.ideas.length} {data.ideas.length === 1 ? 'idea' : 'ideas'}
+			{/if}
+		</span>
+		{#if filtersActive}
+			<a href="/app/ideas" class="link text-xs">Clear filters</a>
 		{/if}
-		· Sorted: {sortLabel}
 	</p>
+</div>
 
-	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-		{#if data.ideas.length === 0}
-			<div class="col-span-full rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
-				No ideas match your filters.
-			</div>
-		{:else if filteredIdeas.length === 0}
-			<div class="col-span-full rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
-				No ideas match “{searchQuery.trim()}”. Try a different search or clear the box.
-			</div>
+<!-- Grid -->
+{#if data.ideas.length === 0}
+	<div class="panel rise mt-6 flex flex-col items-center px-6 py-16 text-center" style:--i="4">
+		<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ember-500/12 text-ember-400">
+			<Icon name="spark" size={26} />
+		</div>
+		{#if filtersActive}
+			<h2 class="mt-5 text-lg font-semibold">Nothing matches these filters</h2>
+			<p class="mt-1 text-sm text-ink-400">Try another stage or category.</p>
+			<a href="/app/ideas" class="btn btn-ghost mt-6">Clear filters</a>
 		{:else}
-			{#each filteredIdeas as idea (idea.id)}
-				<IdeaCard {idea} />
-			{/each}
+			<h2 class="mt-5 text-lg font-semibold">Your idea library is empty</h2>
+			<p class="mt-1 max-w-sm text-sm text-ink-400">Every project starts as a line in a notebook. Write the first one.</p>
+			<button type="button" class="btn btn-primary mt-6" onclick={openCreateModal}>Capture an idea</button>
 		{/if}
 	</div>
-</div>
+{:else if filteredIdeas.length === 0}
+	<div class="panel-quiet mt-6 px-6 py-12 text-center text-sm text-ink-400">
+		No ideas match “<span class="text-ink-100">{searchQuery.trim()}</span>”.
+		<button type="button" class="link ml-1" onclick={() => (searchQuery = '')}>Clear search</button>
+	</div>
+{:else}
+	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+		{#each filteredIdeas as idea, i (idea.id)}
+			<IdeaCard {idea} index={Math.min(i, 12) + 4} />
+		{/each}
+	</div>
+{/if}
+
+<IdeaEditorModal
+	bind:this={ideaModalRef}
+	titleText="New idea"
+	headingId="create-idea-title"
+	formAction="?/createIdea"
+	submitLabel="Save idea"
+	{initial}
+	formError={form?.error}
+/>

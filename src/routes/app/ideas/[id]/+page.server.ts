@@ -21,7 +21,7 @@ export async function load({ params }) {
 
 	const project = await prisma.project.findUnique({
 		where: { ideaId: id },
-		select: { id: true, name: true, status: true }
+		select: { id: true, name: true, status: true, tasks: { select: { status: true } } }
 	});
 
 	return { idea, project };
@@ -61,11 +61,11 @@ export const actions = {
 		if (typeof title !== 'string' || !title.trim()) {
 			return fail(400, { error: 'Title is required.', initial });
 		}
-		if (typeof description !== 'string' || !description.trim()) {
-			return fail(400, { error: 'Description is required.', initial });
+		if (typeof description !== 'string') {
+			return fail(400, { error: 'Description must be a string.', initial });
 		}
-		if (typeof category !== 'string' || !category.trim()) {
-			return fail(400, { error: 'Category is required.', initial });
+		if (typeof category !== 'string') {
+			return fail(400, { error: 'Category must be a string.', initial });
 		}
 		if (typeof tags !== 'string') {
 			return fail(400, { error: 'Tags must be a string.', initial });
@@ -86,7 +86,7 @@ export const actions = {
 			data: {
 				title: title.trim(),
 				description: description.trim(),
-				category: category.trim(),
+				category: category.trim() || '',
 				tags: normalizedTags,
 				stage: stageValue,
 				interest,
@@ -104,8 +104,13 @@ export const actions = {
 		const id = Number.parseInt(params.id, 10);
 		if (Number.isNaN(id)) throw error(400, 'Invalid idea id.');
 
-		await prisma.idea.delete({ where: { id } });
-		return redirect(303, '/app/ideas/new');
+		// An idea's project and its tasks go with it, otherwise the database blocks the delete.
+		await prisma.$transaction([
+			prisma.task.deleteMany({ where: { project: { ideaId: id } } }),
+			prisma.project.deleteMany({ where: { ideaId: id } }),
+			prisma.idea.deleteMany({ where: { id } })
+		]);
+		return redirect(303, '/app/ideas');
 	},
 
 	convertIdeaToProject: async ({ params }) => {
@@ -123,13 +128,17 @@ export const actions = {
 			return redirect(303, `/app/projects/${existing.id}`);
 		}
 
-		const project = await prisma.project.create({
-			data: {
-				ideaId: id,
-				name: idea.title,
-				status: 'planned'
-			}
-		});
+		const [project] = await prisma.$transaction([
+			prisma.project.create({
+				data: {
+					ideaId: id,
+					name: idea.title,
+					status: 'planned'
+				}
+			}),
+			// Picking an idea to work on moves it out of "captured".
+			prisma.idea.updateMany({ where: { id, stage: 'captured' }, data: { stage: 'selected' } })
+		]);
 
 		return redirect(303, `/app/projects/${project.id}`);
 	}

@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
+import { runCreateIdeaAction } from '$lib/server/createIdeaAction';
 
 const STAGE_OPTIONS = ['captured', 'selected', 'archived'] as const;
 type Stage = (typeof STAGE_OPTIONS)[number];
@@ -59,3 +60,7 @@ export async function load({ url }) {
 		sort
 	};
 }
+
+export const actions = {
+	createIdea: runCreateIdeaAction
+} satisfies import('./$types').Actions;

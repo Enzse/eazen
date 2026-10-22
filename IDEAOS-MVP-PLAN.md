@@ -94,7 +94,7 @@ Fields:
 - `/app/ideas`
   - List + filters (`category`, `stage`)
   - Sort by `priority_score` and `createdAt`
-- `/app/ideas/new`
+- `/app/ideas` (create via modal; `/app/ideas/new` redirects to `?new=1`)
   - Create idea
 - `/app/ideas/[id]`
   - Idea detail
@@ -137,7 +137,7 @@ Implementation:
   - create/update/delete Idea
   - recompute `priority_score` on create/update
 - Routes:
-  - `/app/ideas/new`
+  - `/app/ideas` (create via modal; `/app/ideas/new` redirects to `?new=1`)
   - `/app/ideas/[id]`
 
 Acceptance criteria:

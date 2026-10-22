@@ -8,12 +8,10 @@ export async function load() {
 			name: true,
 			status: true,
 			updatedAt: true,
-			idea: {
-				select: { id: true, title: true }
-			}
+			idea: { select: { id: true, title: true } },
+			tasks: { select: { status: true } }
 		}
 	});
 
 	return { projects };
 }
-
