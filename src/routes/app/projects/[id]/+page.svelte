@@ -102,7 +102,7 @@
 				<h1 class="rise text-4xl leading-[1.05] font-bold text-ink-100 sm:text-5xl" style:--i="1">{project.name}</h1>
 				<button
 					type="button"
-					class="mt-2 rounded-lg p-2 text-ink-600 transition-all hover:bg-white/6 hover:text-ink-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+					class="mt-2 rounded-lg p-2 text-ink-600 transition-all hover:bg-veil/6 hover:text-ink-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
 					onclick={startRename}
 					aria-label="Rename project"
 				>
@@ -119,7 +119,7 @@
 		<form
 			method="POST"
 			action="?/updateProject"
-			class="rise mt-6 grid grid-cols-4 gap-1 rounded-xl border border-white/7 bg-ink-950/50 p-1 sm:inline-flex"
+			class="rise mt-6 grid grid-cols-4 gap-1 rounded-xl border border-veil/7 bg-well p-1 sm:inline-flex"
 			style:--i="2"
 			use:enhance={({ submitter, cancel }) => {
 				if (!confirmComplete(submitter)) cancel();
@@ -133,7 +133,7 @@
 					name="status"
 					{value}
 					class="flex items-center justify-center gap-1.5 rounded-lg px-1.5 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3 sm:text-sm {on
-						? 'bg-white/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
+						? 'bg-veil/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
 						: 'text-ink-500 hover:text-ink-300'}"
 					aria-pressed={on}
 				>
@@ -148,19 +148,19 @@
 	<div class="rise flex items-center gap-5" style:--i="3">
 		<div class="relative h-24 w-24">
 			<svg viewBox="0 0 72 72" class="h-full w-full -rotate-90" aria-hidden="true">
-				<circle cx="36" cy="36" r={R} fill="none" stroke="rgb(255 236 220 / 0.07)" stroke-width="5" />
+				<circle cx="36" cy="36" r={R} fill="none" style:stroke="rgb(var(--veil) / 0.08)" stroke-width="5" />
 				<circle
 					cx="36"
 					cy="36"
 					r={R}
 					fill="none"
-					stroke={project.status === 'completed' ? 'var(--color-sage-400)' : 'var(--color-ember-500)'}
+					style:stroke={project.status === 'completed' ? 'var(--color-sage-400)' : 'var(--color-ember-500)'}
 					stroke-width="5"
 					stroke-linecap="round"
 					stroke-dasharray={C}
 					stroke-dashoffset={C * (1 - pct / 100)}
 					class="transition-[stroke-dashoffset] duration-700"
-					style:filter={project.status === 'completed' ? undefined : 'drop-shadow(0 0 6px rgb(244 123 53 / 0.6))'}
+					style:filter={project.status === 'completed' ? undefined : 'drop-shadow(0 0 6px rgb(var(--accent) / 0.6))'}
 				/>
 			</svg>
 			<span class="num absolute inset-0 flex items-center justify-center text-xl font-semibold">{pct}%</span>

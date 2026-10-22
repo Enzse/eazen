@@ -21,7 +21,10 @@
 		command: 'M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z',
 		folder: 'M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z',
 		pause: 'M9 6v12M15 6v12',
-		flag: 'M5 21V4M5 4h11l-2 4 2 4H5'
+		flag: 'M5 21V4M5 4h11l-2 4 2 4H5',
+		sliders: 'M4 7h9M17 7h3M15 5v4M4 17h3M11 17h9M9 15v4',
+		palette:
+			'M12 21a9 9 0 1 1 9-9c0 2-1.6 3-3.4 3H15a2 2 0 0 0-1.4 3.4c.5.6.2 2.6-1.6 2.6zM7.5 11h.01M10.5 7.5h.01M15 7.5h.01'
 	} as const;
 
 	export type IconName = keyof typeof PATHS;

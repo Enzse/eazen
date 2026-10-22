@@ -62,7 +62,7 @@
 				</span>
 			</div>
 			<h3
-				class="mt-2 font-display font-semibold text-ink-100 transition-colors group-hover:text-white {featured
+				class="mt-2 font-display font-semibold text-ink-100 transition-colors group-hover:text-ember-300 {featured
 					? 'text-2xl leading-tight sm:text-3xl'
 					: 'text-lg leading-snug'}"
 			>
@@ -93,7 +93,7 @@
 						<span class="text-ink-500">{f.label}</span>
 						<span class="num {f.minus ? 'text-ink-400' : 'text-ink-200'}">{f.minus ? '−' : '+'}{f.v}</span>
 					</div>
-					<div class="mt-1.5 h-1 overflow-hidden rounded-full bg-white/6">
+					<div class="mt-1.5 h-1 overflow-hidden rounded-full bg-veil/6">
 						<div
 							class="h-full rounded-full {f.minus ? 'bg-ink-500' : 'bg-linear-to-r from-ember-600 to-ember-400'}"
 							style:width="{f.v * 10}%"

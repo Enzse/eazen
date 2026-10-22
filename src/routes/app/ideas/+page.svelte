@@ -109,13 +109,13 @@
 		</label>
 
 		<div class="flex flex-wrap items-center gap-2">
-			<nav class="flex rounded-xl border border-white/7 bg-ink-950/50 p-1" aria-label="Filter by stage">
+			<nav class="flex rounded-xl border border-veil/7 bg-well p-1" aria-label="Filter by stage">
 				{#each stageTabs as t (t.label)}
 					{@const on = (data.selectedStage ?? null) === t.value}
 					<a
 						href={hrefWith({ stage: t.value })}
 						class="rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 {on
-							? 'bg-white/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
+							? 'bg-veil/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
 							: 'text-ink-500 hover:text-ink-300'}"
 						aria-current={on ? 'true' : undefined}
 						data-sveltekit-noscroll

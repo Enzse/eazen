@@ -142,12 +142,12 @@
 
 		<fieldset>
 			<legend class="label">Stage</legend>
-			<div class="mt-2 grid grid-cols-3 gap-1 rounded-xl border border-white/7 bg-ink-950/50 p-1">
+			<div class="mt-2 grid grid-cols-3 gap-1 rounded-xl border border-veil/7 bg-well p-1">
 				{#each stageOptions as s (s)}
 					<label
 						class="cursor-pointer rounded-lg px-3 py-2 text-center text-sm font-medium transition-all duration-200 has-focus-visible:ring-2 has-focus-visible:ring-ember-400 {values.stage ===
 						s
-							? 'bg-white/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
+							? 'bg-veil/8 text-ink-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]'
 							: 'text-ink-500 hover:text-ink-300'}"
 					>
 						<input type="radio" name="stage" value={s} class="sr-only" bind:group={values.stage} />

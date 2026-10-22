@@ -40,7 +40,7 @@
 <!-- Don’t put `flex` on <dialog>: it overrides the default `display:none` when closed. -->
 <dialog
 	bind:this={dialogEl}
-	class="editor m-auto w-[min(100vw-1.5rem,40rem)] max-w-none overflow-hidden rounded-3xl border border-white/9 bg-ink-900 p-0 text-ink-100 shadow-[0_50px_100px_-30px_rgb(0_0_0/0.9)]"
+	class="editor m-auto w-[min(100vw-1.5rem,40rem)] max-w-none overflow-hidden rounded-3xl border border-veil/9 bg-ink-900 p-0 text-ink-100 shadow-[0_50px_100px_-30px_rgb(var(--shade)/calc(0.9*var(--shade-k)))]"
 	aria-labelledby={headingId}
 	onclick={(e) => {
 		if (e.target === dialogEl) closeModal();
@@ -63,7 +63,7 @@
 			<IdeaFormStepper phase={createPhase} />
 		</div>
 
-		<div class="relative min-h-0 flex-1 overflow-y-auto border-t border-white/6 px-6 py-6">
+		<div class="relative min-h-0 flex-1 overflow-y-auto border-t border-veil/6 px-6 py-6">
 			{#if formError}
 				<div class="alert mb-5" role="alert">{formError}</div>
 			{/if}
@@ -80,7 +80,7 @@
 		animation: dialog-in 260ms var(--ease-out-soft);
 	}
 	.editor::backdrop {
-		background: rgb(8 7 6 / 0.65);
+		background: var(--backdrop);
 		backdrop-filter: blur(6px);
 	}
 </style>

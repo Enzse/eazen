@@ -39,7 +39,7 @@
 <article
 	class="rise group rounded-2xl border bg-ink-900/70 p-3.5 transition-all duration-200 {editing
 		? 'border-ember-500/30'
-		: 'border-white/6 hover:border-white/12 hover:bg-ink-850/80'}"
+		: 'border-veil/6 hover:border-veil/12 hover:bg-ink-850/80'}"
 	style:--i={index}
 >
 	{#if !editing}
@@ -55,8 +55,8 @@
 					class="mt-0.5 flex h-6 w-6 items-center justify-center rounded-lg border transition-all duration-200 active:scale-90 {done
 						? 'border-sage-400/40 bg-sage-400/15 text-sage-400'
 						: task.status === 'doing'
-							? 'border-ember-500/50 bg-ember-500/15 text-ember-300 shadow-[0_0_12px_-2px_rgb(244_123_53/0.6)]'
-							: 'border-white/15 text-transparent hover:border-ember-400/60 hover:text-ember-400/60'}"
+							? 'border-ember-500/50 bg-ember-500/15 text-ember-300 shadow-[0_0_12px_-2px_rgb(var(--accent)/0.6)]'
+							: 'border-veil/15 text-transparent hover:border-ember-400/60 hover:text-ember-400/60'}"
 					title="Move to {next.label}"
 					aria-label="Move “{task.title}” to {next.label}"
 				>
@@ -80,7 +80,7 @@
 
 			<button
 				type="button"
-				class="rounded-lg p-1.5 text-ink-600 opacity-100 transition-all hover:bg-white/6 hover:text-ink-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+				class="rounded-lg p-1.5 text-ink-600 opacity-100 transition-all hover:bg-veil/6 hover:text-ink-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
 				onclick={startEdit}
 				aria-label="Edit “{task.title}”"
 			>
@@ -112,12 +112,12 @@
 					bind:value={editDescription}
 				></textarea>
 			</label>
-			<div class="grid grid-cols-3 gap-1 rounded-xl border border-white/7 bg-ink-950/50 p-1">
+			<div class="grid grid-cols-3 gap-1 rounded-xl border border-veil/7 bg-well p-1">
 				{#each Object.entries(TASK_STATUS) as [value, st] (value)}
 					<label
 						class="cursor-pointer rounded-lg py-1.5 text-center text-xs font-medium transition-all has-focus-visible:ring-2 has-focus-visible:ring-ember-400 {editStatus ===
 						value
-							? 'bg-white/8 text-ink-100'
+							? 'bg-veil/8 text-ink-100'
 							: 'text-ink-500 hover:text-ink-300'}"
 					>
 						<input type="radio" name="status" {value} class="sr-only" bind:group={editStatus} />

@@ -47,7 +47,7 @@
 	<div class="rise mt-6 flex flex-wrap items-center gap-3" style:--i="3">
 		<a href="/app/ideas?new=1" class="btn btn-primary"><Icon name="plus" size={16} stroke={2.25} /> Capture an idea</a>
 		<span class="hidden text-xs text-ink-500 sm:inline">
-			or press <kbd class="num rounded-md border border-white/10 bg-white/4 px-1.5 py-0.5 text-ink-300">Ctrl K</kbd> to jump anywhere
+			or press <kbd class="num rounded-md border border-veil/10 bg-veil/4 px-1.5 py-0.5 text-ink-300">Ctrl K</kbd> to jump anywhere
 		</span>
 	</div>
 </section>
@@ -64,7 +64,7 @@
 
 	{#if !featured}
 		<div class="panel rise mt-5 flex flex-col items-center px-6 py-14 text-center">
-			<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ember-500/12 text-ember-400 shadow-[0_0_30px_-6px_rgb(244_123_53/0.6)]">
+			<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ember-500/12 text-ember-400 shadow-[0_0_30px_-6px_rgb(var(--accent)/0.6)]">
 				<Icon name="spark" size={26} />
 			</div>
 			<h3 class="mt-5 text-lg font-semibold">No ideas yet</h3>
@@ -127,7 +127,7 @@
 				<li>
 					<a
 						href="/app/ideas?stage={s.k}"
-						class="group flex items-center justify-between rounded-xl px-3 py-2.5 transition-colors hover:bg-white/4"
+						class="group flex items-center justify-between rounded-xl px-3 py-2.5 transition-colors hover:bg-veil/4"
 					>
 						<span class="text-sm text-ink-300 group-hover:text-ink-100">{s.label}</span>
 						<span class="flex items-center gap-2">

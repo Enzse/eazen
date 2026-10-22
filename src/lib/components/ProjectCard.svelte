@@ -59,7 +59,7 @@
 				</span>
 				<span class="num text-ink-500">{fmtDate(project.updatedAt)}</span>
 			</div>
-			<div class="mt-2 h-1.5 overflow-hidden rounded-full bg-white/6">
+			<div class="mt-2 h-1.5 overflow-hidden rounded-full bg-veil/6">
 				<div
 					class="h-full rounded-full transition-[width] duration-700 {project.status === 'completed'
 						? 'bg-sage-400'

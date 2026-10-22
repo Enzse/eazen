@@ -34,14 +34,134 @@
 	--color-sage-400: #9cc3a6;
 	--color-rust-400: #e7745f;
 
+	/* Overlay tint for hairlines and hover fills, and text that sits on the accent. */
+	--color-veil: #ffecdc;
+	--color-on-accent: #0d0c0b;
+	--color-well: rgb(13 12 11 / 0.5);
+
 	--ease-spring: cubic-bezier(0.2, 0.9, 0.25, 1.15);
 	--ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- Themes ----------
+   Each theme sets the same variables. Set data-theme on <html> (or on any element,
+   for a scoped preview). Channel variables (--accent etc.) are "R G B" so they work
+   inside rgb(var(--accent) / 0.5). */
+
+:root,
+[data-theme='ember'] {
+	color-scheme: dark;
+
+	--color-ink-950: #0d0c0b;
+	--color-ink-900: #141211;
+	--color-ink-850: #1a1816;
+	--color-ink-800: #211e1b;
+	--color-ink-700: #2e2a26;
+	--color-ink-600: #4a443e;
+	--color-ink-500: #736a62;
+	--color-ink-400: #9a9088;
+	--color-ink-300: #bcb3aa;
+	--color-ink-200: #dbd3cb;
+	--color-ink-100: #f1ebe5;
+
+	--color-ember-200: #ffd9bb;
+	--color-ember-300: #ffbf8f;
+	--color-ember-400: #ff9b5a;
+	--color-ember-500: #f47b35;
+	--color-ember-600: #d9611f;
+	--color-ember-700: #9e4417;
+
+	--color-sand-300: #e6c48f;
+	--color-sage-400: #9cc3a6;
+	--color-rust-400: #e7745f;
+	--color-veil: #ffecdc;
+	--color-on-accent: #0d0c0b;
+	--color-well: rgb(13 12 11 / 0.5);
+
+	--accent: 244 123 53;
+	--accent-hi: 255 155 90;
+	--veil: 255 236 220;
+	--danger: 231 116 95;
+	--shade: 0 0 0;
+	--shade-k: 1;
+	--backdrop: rgb(8 7 6 / 0.62);
+
+	--canvas: #0d0c0b;
+	--canvas-glow-1: rgb(244 123 53 / 0.09);
+	--canvas-glow-2: rgb(230 196 143 / 0.05);
+	--grain: 0.045;
+	--panel-from: rgb(33 30 27 / 0.72);
+	--panel-to: rgb(20 18 17 / 0.72);
+	--panel-border: rgb(255 236 220 / 0.07);
+	--thumb: #f1ebe5;
+	--icon-bg: linear-gradient(140deg, #ffbf8f, #f47b35 55%, #9e4417);
+	--icon-ink: #0d0c0b;
+	--icon-spark: #fff3e6;
+	--icon-spark-glow: rgb(255 255 255 / 0.6);
+	--icon-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 8px 24px -8px rgb(244 123 53 / 0.8);
+	--field-bg: rgb(13 12 11 / 0.6);
+	--field-inset: rgb(0 0 0 / 0.3);
+}
+
+/* Minccino: soft gray fur, white tips, ink outlines, a blush of pink. */
+[data-theme='minccino'] {
+	color-scheme: light;
+
+	--color-ink-950: #fbfafa;
+	--color-ink-900: #f6f5f4;
+	--color-ink-850: #efedec;
+	--color-ink-800: #e6e4e3;
+	--color-ink-700: #d3d0cf;
+	--color-ink-600: #aaa5a4;
+	--color-ink-500: #6b6563;
+	--color-ink-400: #5d5756;
+	--color-ink-300: #45403f;
+	--color-ink-200: #2e2a2a;
+	--color-ink-100: #1b1818;
+
+	--color-ember-200: #8a2c42;
+	--color-ember-300: #a63a53;
+	--color-ember-400: #e07d92;
+	--color-ember-500: #cc5770;
+	--color-ember-600: #b2475f;
+	--color-ember-700: #8a3447;
+
+	--color-sand-300: #8a6a5e;
+	--color-sage-400: #3d8458;
+	--color-rust-400: #c2423a;
+	--color-veil: #2d262a;
+	--color-on-accent: #ffffff;
+	--color-well: rgb(45 38 42 / 0.05);
+
+	--accent: 204 87 112;
+	--accent-hi: 224 125 146;
+	--veil: 45 38 42;
+	--danger: 194 66 58;
+	--shade: 70 56 62;
+	--shade-k: 0.32;
+	--backdrop: rgb(48 42 45 / 0.3);
+
+	--canvas: #e8e6e5;
+	--canvas-glow-1: rgb(255 255 255 / 0.85);
+	--canvas-glow-2: rgb(204 87 112 / 0.07);
+	--grain: 0.03;
+	--panel-from: rgb(255 255 255 / 0.94);
+	--panel-to: rgb(246 245 244 / 0.94);
+	--panel-border: rgb(45 38 42 / 0.12);
+	--thumb: #ffffff;
+	--icon-bg: linear-gradient(180deg, #ffffff, #efedec);
+	--icon-ink: #1b1818;
+	--icon-spark: #cc5770;
+	--icon-spark-glow: rgb(204 87 112 / 0.35);
+	--icon-shadow: inset 0 0 0 1px rgb(45 38 42 / 0.14), 0 6px 14px -8px rgb(70 56 62 / 0.45);
+	--field-bg: #ffffff;
+	--field-inset: rgb(70 56 62 / 0.06);
 }
 
 /* ---------- Base ---------- */
 @layer base {
 	html {
-		background: var(--color-ink-950);
+		background: var(--canvas);
 		scroll-behavior: smooth;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -52,9 +172,9 @@
 		color: var(--color-ink-100);
 		font-family: var(--font-sans);
 		background:
-			radial-gradient(60rem 40rem at 12% -10%, rgb(244 123 53 / 0.09), transparent 60%),
-			radial-gradient(50rem 36rem at 105% 8%, rgb(230 196 143 / 0.05), transparent 60%),
-			var(--color-ink-950);
+			radial-gradient(60rem 40rem at 12% -10%, var(--canvas-glow-1), transparent 60%),
+			radial-gradient(50rem 36rem at 105% 8%, var(--canvas-glow-2), transparent 60%),
+			var(--canvas);
 		background-attachment: fixed;
 	}
 
@@ -65,7 +185,7 @@
 		inset: 0;
 		z-index: 60;
 		pointer-events: none;
-		opacity: 0.045;
+		opacity: var(--grain);
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 	}
 
@@ -82,7 +202,7 @@
 	}
 
 	::selection {
-		background: rgb(244 123 53 / 0.35);
+		background: rgb(var(--accent) / 0.35);
 		color: var(--color-ink-100);
 	}
 
@@ -103,18 +223,18 @@
 	.panel {
 		position: relative;
 		border-radius: 1.25rem;
-		background: linear-gradient(180deg, rgb(33 30 27 / 0.72), rgb(20 18 17 / 0.72));
-		border: 1px solid rgb(255 236 220 / 0.07);
+		background: linear-gradient(180deg, var(--panel-from), var(--panel-to));
+		border: 1px solid var(--panel-border);
 		box-shadow:
-			inset 0 1px 0 rgb(255 240 228 / 0.05),
-			0 24px 48px -28px rgb(0 0 0 / 0.7);
+			inset 0 1px 0 rgb(var(--veil) / 0.05),
+			0 24px 48px -28px rgb(var(--shade) / calc(0.7 * var(--shade-k)));
 		backdrop-filter: blur(14px);
 	}
 
 	.panel-quiet {
 		border-radius: 1rem;
-		background: rgb(255 236 220 / 0.025);
-		border: 1px solid rgb(255 236 220 / 0.06);
+		background: rgb(var(--veil) / 0.025);
+		border: 1px solid rgb(var(--veil) / 0.06);
 	}
 
 	.btn {
@@ -150,36 +270,36 @@
 	}
 
 	.btn-primary {
-		color: var(--color-ink-950);
+		color: var(--color-on-accent);
 		background: linear-gradient(180deg, var(--color-ember-400), var(--color-ember-500));
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 0.25),
-			0 10px 28px -10px rgb(244 123 53 / 0.75);
+			0 10px 28px -10px rgb(var(--accent) / 0.75);
 	}
 	.btn-primary:hover {
 		transform: translateY(-1px);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 0.3),
-			0 14px 34px -10px rgb(244 123 53 / 0.9);
+			0 14px 34px -10px rgb(var(--accent) / 0.9);
 	}
 
 	.btn-ghost {
 		color: var(--color-ink-100);
-		background: rgb(255 236 220 / 0.04);
-		border: 1px solid rgb(255 236 220 / 0.09);
+		background: rgb(var(--veil) / 0.04);
+		border: 1px solid rgb(var(--veil) / 0.09);
 	}
 	.btn-ghost:hover {
-		background: rgb(255 236 220 / 0.08);
-		border-color: rgb(255 236 220 / 0.14);
+		background: rgb(var(--veil) / 0.08);
+		border-color: rgb(var(--veil) / 0.14);
 	}
 
 	.btn-danger {
 		color: var(--color-rust-400);
-		background: rgb(231 116 95 / 0.08);
-		border: 1px solid rgb(231 116 95 / 0.22);
+		background: rgb(var(--danger) / 0.08);
+		border: 1px solid rgb(var(--danger) / 0.22);
 	}
 	.btn-danger:hover {
-		background: rgb(231 116 95 / 0.16);
+		background: rgb(var(--danger) / 0.16);
 	}
 
 	.link {
@@ -206,9 +326,9 @@
 		border-radius: 0.8rem;
 		font-size: 0.875rem;
 		color: var(--color-ink-100);
-		background-color: rgb(13 12 11 / 0.6);
-		border: 1px solid rgb(255 236 220 / 0.09);
-		box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.3);
+		background-color: var(--field-bg);
+		border: 1px solid rgb(var(--veil) / 0.09);
+		box-shadow: inset 0 1px 2px var(--field-inset);
 		transition:
 			border-color 160ms ease,
 			box-shadow 160ms ease;
@@ -217,14 +337,14 @@
 		color: var(--color-ink-500);
 	}
 	.field:hover {
-		border-color: rgb(255 236 220 / 0.16);
+		border-color: rgb(var(--veil) / 0.16);
 	}
 	.field:focus {
 		outline: none;
-		border-color: rgb(244 123 53 / 0.6);
+		border-color: rgb(var(--accent) / 0.6);
 		box-shadow:
-			inset 0 1px 2px rgb(0 0 0 / 0.3),
-			0 0 0 3px rgb(244 123 53 / 0.16);
+			inset 0 1px 2px var(--field-inset),
+			0 0 0 3px rgb(var(--accent) / 0.16);
 	}
 	select.field {
 		padding-right: 2.25rem;
@@ -244,8 +364,8 @@
 		font-size: 0.75rem;
 		font-weight: 500;
 		color: var(--color-ink-300);
-		background: rgb(255 236 220 / 0.05);
-		border: 1px solid rgb(255 236 220 / 0.07);
+		background: rgb(var(--veil) / 0.05);
+		border: 1px solid rgb(var(--veil) / 0.07);
 	}
 
 	.eyebrow {
@@ -266,8 +386,8 @@
 		padding: 0.7rem 0.9rem;
 		font-size: 0.875rem;
 		color: var(--color-ember-200);
-		background: rgb(231 116 95 / 0.1);
-		border: 1px solid rgb(231 116 95 / 0.28);
+		background: rgb(var(--danger) / 0.1);
+		border: 1px solid rgb(var(--danger) / 0.28);
 	}
 
 	/* Cursor-following glow. Pair with the `spotlight` action. */
@@ -285,7 +405,7 @@
 		transition: opacity 300ms ease;
 		background: radial-gradient(
 			22rem circle at var(--mx, 50%) var(--my, 50%),
-			rgb(244 123 53 / 0.1),
+			rgb(var(--accent) / 0.1),
 			transparent 45%
 		);
 	}
@@ -300,7 +420,7 @@
 		transition: opacity 300ms ease;
 		background: radial-gradient(
 			16rem circle at var(--mx, 50%) var(--my, 50%),
-			rgb(255 155 90 / 0.55),
+			rgb(var(--accent-hi) / 0.55),
 			transparent 50%
 		);
 		-webkit-mask:
@@ -334,7 +454,7 @@
 			90deg,
 			var(--color-ember-600),
 			var(--color-ember-400) var(--fill, 0%),
-			rgb(255 236 220 / 0.08) var(--fill, 0%)
+			rgb(var(--veil) / 0.08) var(--fill, 0%)
 		);
 	}
 	.slider::-webkit-slider-thumb {
@@ -342,9 +462,9 @@
 		width: 1.15rem;
 		height: 1.15rem;
 		border-radius: 999px;
-		background: var(--color-ink-100);
+		background: var(--thumb);
 		border: 3px solid var(--color-ember-500);
-		box-shadow: 0 0 0 4px rgb(244 123 53 / 0.18);
+		box-shadow: 0 0 0 4px rgb(var(--accent) / 0.18);
 		transition: transform 160ms var(--ease-spring);
 	}
 	.slider::-webkit-slider-thumb:hover {
@@ -354,21 +474,21 @@
 		width: 1.15rem;
 		height: 1.15rem;
 		border-radius: 999px;
-		background: var(--color-ink-100);
+		background: var(--thumb);
 		border: 3px solid var(--color-ember-500);
-		box-shadow: 0 0 0 4px rgb(244 123 53 / 0.18);
+		box-shadow: 0 0 0 4px rgb(var(--accent) / 0.18);
 	}
 	.slider.slider-inverse {
 		background: linear-gradient(
 			90deg,
 			var(--color-ink-500),
 			var(--color-ink-300) var(--fill, 0%),
-			rgb(255 236 220 / 0.08) var(--fill, 0%)
+			rgb(var(--veil) / 0.08) var(--fill, 0%)
 		);
 	}
 	.slider.slider-inverse::-webkit-slider-thumb {
 		border-color: var(--color-ink-300);
-		box-shadow: 0 0 0 4px rgb(255 236 220 / 0.08);
+		box-shadow: 0 0 0 4px rgb(var(--veil) / 0.08);
 	}
 	.slider.slider-inverse::-moz-range-thumb {
 		border-color: var(--color-ink-300);

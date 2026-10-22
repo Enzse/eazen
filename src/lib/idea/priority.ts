@@ -40,7 +40,7 @@ export function getPriorityBadge(priority_score: number): {
 		return {
 			tier,
 			label: 'High',
-			badgeClass: 'bg-ember-500/12 border-ember-500/35 shadow-[0_0_18px_-4px_rgb(244_123_53/0.55)]',
+			badgeClass: 'bg-ember-500/12 border-ember-500/35 shadow-[0_0_18px_-4px_rgb(var(--accent)/0.55)]',
 			textClass: 'text-ember-300',
 			color: 'var(--color-ember-400)'
 		};
@@ -59,7 +59,7 @@ export function getPriorityBadge(priority_score: number): {
 	return {
 		tier,
 		label: 'Low',
-		badgeClass: 'bg-white/4 border-white/10',
+		badgeClass: 'bg-veil/4 border-veil/10',
 		textClass: 'text-ink-400',
 		color: 'var(--color-ink-400)'
 	};

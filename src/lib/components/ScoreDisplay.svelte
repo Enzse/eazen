@@ -39,7 +39,7 @@
 			<div class="mt-1 flex items-baseline gap-3">
 				<span
 					class="num font-semibold tracking-tight {badge.textClass} {compact ? 'text-4xl' : 'text-6xl'}"
-					style:text-shadow={badge.tier === 'high' ? '0 0 32px rgb(244 123 53 / 0.55)' : undefined}
+					style:text-shadow={badge.tier === 'high' ? '0 0 32px rgb(var(--accent) / 0.55)' : undefined}
 				>
 					{priority_score}
 				</span>
@@ -51,18 +51,18 @@
 
 	<!-- Heat track: where this idea sits between the worst and best possible score. -->
 	<div>
-		<div class="relative h-2 rounded-full bg-white/6">
+		<div class="relative h-2 rounded-full bg-veil/6">
 			<div
 				class="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-ink-600 via-sand-300 to-ember-500 transition-[width] duration-700"
 				style:width="{heat * 100}%"
 			></div>
-			<span class="absolute -top-1 h-4 w-px bg-white/15" style:left="{medAt}%"></span>
-			<span class="absolute -top-1 h-4 w-px bg-white/15" style:left="{highAt}%"></span>
+			<span class="absolute -top-1 h-4 w-px bg-veil/15" style:left="{medAt}%"></span>
+			<span class="absolute -top-1 h-4 w-px bg-veil/15" style:left="{highAt}%"></span>
 			<span
 				class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-ink-950 transition-[left] duration-700"
 				style:left="{heat * 100}%"
 				style:background={badge.color}
-				style:box-shadow={badge.tier === 'high' ? '0 0 14px rgb(255 155 90 / 0.9)' : undefined}
+				style:box-shadow={badge.tier === 'high' ? '0 0 14px rgb(var(--accent-hi) / 0.9)' : undefined}
 			></span>
 		</div>
 		<div class="num mt-2 flex justify-between text-[10px] text-ink-500">
@@ -86,7 +86,7 @@
 								? f.sign === '−'
 									? 'bg-ink-400'
 									: 'bg-ember-500'
-								: 'bg-white/6'}"
+								: 'bg-veil/6'}"
 						></span>
 					{/each}
 				</div>

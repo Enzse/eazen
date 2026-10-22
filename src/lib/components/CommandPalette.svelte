@@ -32,7 +32,8 @@
 		{ id: 'a-new', group: 'Actions', label: 'New idea', href: '/app/ideas?new=1', icon: 'plus' },
 		{ id: 'a-dash', group: 'Actions', label: 'Go to dashboard', href: '/app/dashboard', icon: 'home' },
 		{ id: 'a-ideas', group: 'Actions', label: 'Go to ideas', href: '/app/ideas', icon: 'spark' },
-		{ id: 'a-proj', group: 'Actions', label: 'Go to projects', href: '/app/projects', icon: 'stack' }
+		{ id: 'a-proj', group: 'Actions', label: 'Go to projects', href: '/app/projects', icon: 'stack' },
+		{ id: 'a-settings', group: 'Actions', label: 'Settings and theme', href: '/app/settings', icon: 'sliders' }
 	];
 
 	const all = $derived<Item[]>([
@@ -132,13 +133,13 @@
 
 <dialog
 	bind:this={dialogEl}
-	class="palette m-auto mt-[12vh] w-[min(100vw-2rem,36rem)] max-w-none overflow-hidden rounded-2xl border border-white/10 bg-ink-900/95 p-0 text-ink-100 shadow-[0_40px_80px_-20px_rgb(0_0_0/0.8),0_0_0_1px_rgb(255_236_220/0.04)] backdrop-blur-xl"
+	class="palette m-auto mt-[12vh] w-[min(100vw-2rem,36rem)] max-w-none overflow-hidden rounded-2xl border border-veil/10 bg-ink-900/95 p-0 text-ink-100 shadow-[0_40px_80px_-20px_rgb(var(--shade)/calc(0.8*var(--shade-k))),0_0_0_1px_rgb(var(--veil)/0.04)] backdrop-blur-xl"
 	aria-label="Command bar"
 	onclick={(e) => {
 		if (e.target === dialogEl) close();
 	}}
 >
-	<div class="flex items-center gap-3 border-b border-white/7 px-4">
+	<div class="flex items-center gap-3 border-b border-veil/7 px-4">
 		<Icon name="search" class="text-ink-500" />
 		<input
 			bind:this={inputEl}
@@ -150,7 +151,7 @@
 			autocomplete="off"
 			spellcheck="false"
 		/>
-		<kbd class="num rounded-md border border-white/10 px-1.5 py-0.5 text-[10px] text-ink-500">Esc</kbd>
+		<kbd class="num rounded-md border border-veil/10 px-1.5 py-0.5 text-[10px] text-ink-500">Esc</kbd>
 	</div>
 
 	<div class="max-h-[min(60vh,26rem)] overflow-y-auto p-2" role="listbox" aria-label="Results">
@@ -169,7 +170,7 @@
 					class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors {idx ===
 					active
 						? 'bg-ember-500/12 text-ink-100'
-						: 'text-ink-300 hover:bg-white/4'}"
+						: 'text-ink-300 hover:bg-veil/4'}"
 					onmouseenter={() => (active = idx)}
 					onclick={() => choose(item)}
 				>
@@ -186,7 +187,7 @@
 		{/each}
 	</div>
 
-	<div class="flex items-center gap-4 border-t border-white/7 px-4 py-2.5 text-[11px] text-ink-500">
+	<div class="flex items-center gap-4 border-t border-veil/7 px-4 py-2.5 text-[11px] text-ink-500">
 		<span><kbd class="num">↑↓</kbd> move</span>
 		<span><kbd class="num">↵</kbd> open</span>
 		<span class="ml-auto"><kbd class="num">Ctrl K</kbd> toggle</span>
@@ -198,7 +199,7 @@
 		animation: dialog-in 220ms var(--ease-out-soft);
 	}
 	.palette::backdrop {
-		background: rgb(8 7 6 / 0.6);
+		background: var(--backdrop);
 		backdrop-filter: blur(4px);
 	}
 </style>

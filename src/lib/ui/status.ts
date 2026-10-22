@@ -3,11 +3,11 @@ import type { IconName } from '$lib/components/Icon.svelte';
 type StatusStyle = { label: string; class: string; dot: string; icon: IconName };
 
 export const PROJECT_STATUS: Record<string, StatusStyle> = {
-	planned: { label: 'Planned', class: 'text-ink-300 bg-white/4 border-white/10', dot: 'bg-ink-400', icon: 'flag' },
+	planned: { label: 'Planned', class: 'text-ink-300 bg-veil/4 border-veil/10', dot: 'bg-ink-400', icon: 'flag' },
 	active: {
 		label: 'Active',
 		class: 'text-ember-300 bg-ember-500/12 border-ember-500/30',
-		dot: 'bg-ember-400 shadow-[0_0_10px_rgb(255_155_90/0.9)]',
+		dot: 'bg-ember-400 shadow-[0_0_10px_rgb(var(--accent-hi)/0.9)]',
 		icon: 'bolt'
 	},
 	paused: { label: 'Paused', class: 'text-sand-300 bg-sand-300/8 border-sand-300/25', dot: 'bg-sand-300', icon: 'pause' },
@@ -20,7 +20,7 @@ export const PROJECT_STATUS: Record<string, StatusStyle> = {
 };
 
 export const TASK_STATUS: Record<string, StatusStyle> = {
-	todo: { label: 'To do', class: 'text-ink-300 bg-white/4 border-white/10', dot: 'bg-ink-500', icon: 'circle' },
+	todo: { label: 'To do', class: 'text-ink-300 bg-veil/4 border-veil/10', dot: 'bg-ink-500', icon: 'circle' },
 	doing: {
 		label: 'Doing',
 		class: 'text-ember-300 bg-ember-500/12 border-ember-500/30',

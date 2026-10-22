@@ -1,7 +1,7 @@
 import { prisma } from '$lib/server/prisma';
 
 /** Lightweight index for the Ctrl+K command bar. */
-export async function load() {
+export async function load({ locals }) {
 	const [ideas, projects] = await Promise.all([
 		prisma.idea.findMany({
 			select: { id: true, title: true, priority_score: true, stage: true },
@@ -13,5 +13,5 @@ export async function load() {
 		})
 	]);
 
-	return { nav: { ideas, projects } };
+	return { nav: { ideas, projects }, theme: locals.theme };
 }
